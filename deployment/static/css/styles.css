@@ -1,0 +1,116 @@
+/* Custom styles for Stock Tracker Application */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.chart-container {
+    min-height: 400px;
+}
+
+/* Stock info styling */
+.stock-price {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.stock-change {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.stock-change.positive {
+    color: #28a745;
+}
+
+.stock-change.negative {
+    color: #dc3545;
+}
+
+/* Highlight for all-time highs */
+.all-time-high {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid #28a745;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+/* Highlight for significant drops */
+.significant-drop {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+/* Watchlist table styling */
+.table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn-remove {
+    color: #dc3545;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.btn-remove:hover {
+    color: #bd2130;
+}
+
+/* Badge styling */
+.badge-ath {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-drop {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Loading spinner */
+.spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stock-price {
+        font-size: 1.5rem;
+    }
+    
+    .stock-change {
+        font-size: 1rem;
+    }
+    
+    .chart-container {
+        min-height: 300px;
+    }
+}

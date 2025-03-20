@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Tracker - Monitor Drops and All-Time Highs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Stock Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#watchlist">Watchlist</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <input id="stockSearch" class="form-control me-2" type="search" placeholder="Enter stock symbol..." aria-label="Search">
+                    <button id="searchBtn" class="btn btn-outline-light" type="button">Search</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Main Content Area -->
+        <div class="row">
+            <!-- Stock Info Panel -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 id="stockSymbol" class="card-title mb-0">Stock Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="stockInfo">
+                            <p class="text-center text-muted">Enter a stock symbol to view information</p>
+                        </div>
+                        <div id="stockActions" class="d-none mt-3">
+                            <button id="addToWatchlist" class="btn btn-sm btn-outline-primary">Add to Watchlist</button>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Time Range
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item range-option" data-range="1mo" href="#">1 Month</a></li>
+                                    <li><a class="dropdown-item range-option" data-range="3mo" href="#">3 Months</a></li>
+                                    <li><a class="dropdown-item range-option" data-range="6mo" href="#">6 Months</a></li>
+                                    <li><a class="dropdown-item range-option" data-range="1y" href="#">1 Year</a></li>
+                                    <li><a class="dropdown-item range-option" data-range="5y" href="#">5 Years</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Significant Events Panel -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning">
+                        <h5 class="card-title mb-0">Significant Events</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="eventsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="drops-tab" data-bs-toggle="tab" data-bs-target="#drops" type="button" role="tab">Drops</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="highs-tab" data-bs-toggle="tab" data-bs-target="#highs" type="button" role="tab">All-Time Highs</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3" id="eventsTabContent">
+                            <div class="tab-pane fade show active" id="drops" role="tabpanel">
+                                <div id="dropsContent">
+                                    <p class="text-center text-muted">No drop data available</p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="highs" role="tabpanel">
+                                <div id="highsContent">
+                                    <p class="text-center text-muted">No all-time high data available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Panel -->
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Price Chart</h5>
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-outline-light interval-btn" data-interval="1d">Daily</button>
+                            <button type="button" class="btn btn-outline-light interval-btn" data-interval="1wk">Weekly</button>
+                            <button type="button" class="btn btn-outline-light interval-btn" data-interval="1mo">Monthly</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:400px;">
+                            <canvas id="priceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Watchlist Panel -->
+                <div id="watchlist" class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">Watchlist</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Price</th>
+                                        <th>All-Time High</th>
+                                        <th>% from ATH</th>
+                                        <th>Recent Drops</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="watchlistTable">
+                                    <tr>
+                                        <td colspan="6" class="text-center">Loading watchlist...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">Stock Tracker Application &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
